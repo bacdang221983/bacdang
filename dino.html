@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dino Game - Offline</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #f4f4f4;
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+    #game {
+      width: 800px;
+      height: 200px;
+      margin: 50px auto;
+      position: relative;
+      background-color: #fff;
+      border: 2px solid #333;
+      overflow: hidden;
+    }
+    #dino {
+      width: 40px;
+      height: 40px;
+      background-color: #333;
+      position: absolute;
+      bottom: 0;
+      left: 50px;
+    }
+    .obstacle {
+      width: 20px;
+      height: 40px;
+      background-color: green;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+    #score {
+      text-align: center;
+      font-size: 20px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="game">
+  <div id="dino"></div>
+</div>
+<div id="score">Score: 0</div>
+
+<script>
+  const dino = document.getElementById('dino');
+  const game = document.getElementById('game');
+  const scoreText = document.getElementById('score');
+
+  let isJumping = false;
+  let score = 0;
+
+  document.addEventListener('keydown', function (e) {
+    if (e.code === 'Space' || e.code === 'ArrowUp') {
+      jump();
+    }
+  });
+
+  function jump() {
+    if (isJumping) return;
+    isJumping = true;
+
+    let upInterval = setInterval(() => {
+      let top = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
+      if (top >= 100) {
+        clearInterval(upInterval);
+        let downInterval = setInterval(() => {
+          if (top <= 0) {
+            clearInterval(downInterval);
+            isJumping = false;
+          } else {
+            top -= 5;
+            dino.style.bottom = top + "px";
+          }
+        }, 20);
+      } else {
+        top += 5;
+        dino.style.bottom = top + "px";
+      }
+    }, 20);
+  }
+
+  function createObstacle() {
+    const obstacle = document.createElement('div');
+    obstacle.classList.add('obstacle');
+    game.appendChild(obstacle);
+
+    let obstacleLeft = 800;
+    obstacle.style.left = obstacleLeft + 'px';
+
+    let moveInterval = setInterval(() => {
+      obstacleLeft -= 5;
+      obstacle.style.left = obstacleLeft + 'px';
+
+      // Kiểm tra va chạm
+      let dinoBottom = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
+      if (
+        obstacleLeft > 50 && obstacleLeft < 90 &&
+        dinoBottom < 40
+      ) {
+        clearInterval(moveInterval);
+        alert("Game Over! Score: " + score);
+        location.reload();
+      }
+
+      if (obstacleLeft < -20) {
+        clearInterval(moveInterval);
+        game.removeChild(obstacle);
+        score++;
+        scoreText.innerText = "Score: " + score;
+      }
+    }, 20);
+
+    // Lặp lại chướng ngại vật
+    setTimeout(createObstacle, Math.random() * 2000 + 1000);
+  }
+
+  createObstacle();
+</script>
+
+</body>
+</html>
