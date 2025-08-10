@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dino Game - Offline</title>
+  <title>Dino Game - Có hình khủng long</title>
   <style>
     body {
       margin: 0;
@@ -10,6 +10,7 @@
       font-family: sans-serif;
       overflow: hidden;
     }
+
     #game {
       width: 800px;
       height: 200px;
@@ -19,22 +20,27 @@
       border: 2px solid #333;
       overflow: hidden;
     }
+
     #dino {
-      width: 40px;
-      height: 40px;
-      background-color: #333;
+      width: 44px;
+      height: 47px;
+      background-image: url('https://raw.githubusercontent.com/wayou/t-rex-runner/gh-pages/images/t-rex.png');
+      background-size: cover;
       position: absolute;
       bottom: 0;
       left: 50px;
     }
+
     .obstacle {
-      width: 20px;
-      height: 40px;
-      background-color: green;
+      width: 25px;
+      height: 50px;
+      background-image: url('https://raw.githubusercontent.com/wayou/t-rex-runner/gh-pages/images/cactus1.png');
+      background-size: cover;
       position: absolute;
       bottom: 0;
       right: 0;
     }
+
     #score {
       text-align: center;
       font-size: 20px;
@@ -99,18 +105,17 @@
       obstacleLeft -= 5;
       obstacle.style.left = obstacleLeft + 'px';
 
-      // Kiểm tra va chạm
       let dinoBottom = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
       if (
         obstacleLeft > 50 && obstacleLeft < 90 &&
-        dinoBottom < 40
+        dinoBottom < 50
       ) {
         clearInterval(moveInterval);
         alert("Game Over! Score: " + score);
         location.reload();
       }
 
-      if (obstacleLeft < -20) {
+      if (obstacleLeft < -30) {
         clearInterval(moveInterval);
         game.removeChild(obstacle);
         score++;
@@ -118,7 +123,6 @@
       }
     }, 20);
 
-    // Lặp lại chướng ngại vật
     setTimeout(createObstacle, Math.random() * 2000 + 1000);
   }
 
@@ -127,3 +131,4 @@
 
 </body>
 </html>
+
